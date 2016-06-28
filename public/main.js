@@ -46,18 +46,13 @@ function createTodo(title, callback) {
     });
 }
 
-var requestsRunning = 0;
 function getTodoList(callback) {
-    requestsRunning++;
     fetch("/api/todo", {
         method: "GET"
     })
     .then(function(response) {
         if (response.status === 200) {
-            if (requestsRunning < 2) {
-                response.json().then(callback);
-            }
-            requestsRunning--;
+            response.json().then(callback);
         } else {
             throw Error("Failed to get list. Server returned " + response.status + " - " + response.statusText);
         }
