@@ -33,14 +33,17 @@ function createTodo(title, callback) {
         body: JSON.stringify({
             title: title
         })
-    }).then(function(response) {
+    })
+    .then(errorHandler)
+    .then(function(response) {
         if (response.status === 201) {
             callback();
         } else {
             throw Error("Failed to create item. Server returned " + response.status + " - " + response.statusText);
         }
-    }).catch(function(err) {
-        error.textContent = err;
+    })
+    .catch(function(err) {
+        setErrorText(err);
     });
 }
 
@@ -49,7 +52,9 @@ function getTodoList(callback) {
     requestsRunning++;
     fetch("/api/todo", {
         method: "GET"
-    }).then(function(response) {
+    })
+    .then(errorHandler)
+    .then(function(response) {
         if (response.status === 200) {
             if (requestsRunning < 2) {
                 response.json().then(callback);
@@ -59,7 +64,7 @@ function getTodoList(callback) {
             throw Error("Failed to get list. Server returned " + response.status + " - " + response.statusText);
         }
     }).catch(function(err) {
-        error.textContent = err;
+        setErrorText(err);
     });
 }
 
@@ -84,7 +89,6 @@ function updateIncompletes(todos, countLabel) {
 }
 
 function reloadTodoList() {
-    //todoListPlaceholder.style.display = "block";
     getTodoList(function(todos) {
         var filteredTodos;
         var bufferTodoList = document.createElement("ul");
@@ -128,14 +132,16 @@ function deleteTodo(todo) {
         headers: {
             "Content-type": "application/json"
         }
-    }).then(function(response) {
+    })
+    .then(errorHandler)
+    .then(function(response) {
         if (response.status === 200) {
             reloadTodoList();
         } else {
             throw Error("Failed to delete. Server returned " + response.status + " - " + response.statusText);
         }
     }).catch(function(err) {
-        error.textContent = err;
+        setErrorText(err);
     });
 }
 
@@ -150,14 +156,16 @@ function deleteCompletedTodos() {
                 headers: {
                     "Content-type": "application/json"
                 }
-            }).then(function(response) {
+            })
+            .then(errorHandler)
+            .then(function(response) {
                 if (response.status === 200) {
                     reloadTodoList();
                 } else {
                     throw Error("Failed to delete. Server returned " + response.status + " - " + response.statusText);
                 }
             }).catch(function(err) {
-                error.textContent = err;
+                setErrorText(err);
             });
         });
     });
@@ -172,15 +180,28 @@ function completeTodo(todo) {
         body: JSON.stringify({
             isComplete: !todo.isComplete
         })
-    }).then(function(response) {
+    })
+    .then(errorHandler)
+    .then(function(response) {
         if (response.status === 200) {
             reloadTodoList();
         } else {
             throw Error("Failed to complete. Server returned " + response.status + " - " + response.statusText);
         }
     }).catch(function(err) {
-        error.textContent = err;
+        setErrorText(err);
     });
+}
+
+function errorHandler(response) {
+    if (!response.ok) {
+        throw Error("Failed to create item. Server returned " + response.status + " - " + response.statusText);
+    }
+    return response;
+}
+
+function setErrorText(err) {
+    error.textContent = err;
 }
 
 function setFilter(filterType) {
