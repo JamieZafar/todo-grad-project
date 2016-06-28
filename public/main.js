@@ -34,7 +34,6 @@ function createTodo(title, callback) {
             title: title
         })
     })
-    .then(errorHandler)
     .then(function(response) {
         if (response.status === 201) {
             callback();
@@ -53,7 +52,6 @@ function getTodoList(callback) {
     fetch("/api/todo", {
         method: "GET"
     })
-    .then(errorHandler)
     .then(function(response) {
         if (response.status === 200) {
             if (requestsRunning < 2) {
@@ -133,7 +131,6 @@ function deleteTodo(todo) {
             "Content-type": "application/json"
         }
     })
-    .then(errorHandler)
     .then(function(response) {
         if (response.status === 200) {
             reloadTodoList();
@@ -157,7 +154,6 @@ function deleteCompletedTodos() {
                     "Content-type": "application/json"
                 }
             })
-            .then(errorHandler)
             .then(function(response) {
                 if (response.status === 200) {
                     reloadTodoList();
@@ -181,7 +177,6 @@ function completeTodo(todo) {
             isComplete: !todo.isComplete
         })
     })
-    .then(errorHandler)
     .then(function(response) {
         if (response.status === 200) {
             reloadTodoList();
@@ -191,13 +186,6 @@ function completeTodo(todo) {
     }).catch(function(err) {
         setErrorText(err);
     });
-}
-
-function errorHandler(response) {
-    if (!response.ok) {
-        throw Error("Failed to create item. Server returned " + response.status + " - " + response.statusText);
-    }
-    return response;
 }
 
 function setErrorText(err) {
