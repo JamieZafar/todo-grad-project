@@ -41,9 +41,7 @@ function createTodo(title, callback) {
             throw Error("Failed to create item. Server returned " + response.status + " - " + response.statusText);
         }
     })
-    .catch(function(err) {
-        setErrorText(err);
-    });
+    .catch(setErrorText);
 }
 
 function getTodoList(callback) {
@@ -56,9 +54,7 @@ function getTodoList(callback) {
         } else {
             throw Error("Failed to get list. Server returned " + response.status + " - " + response.statusText);
         }
-    }).catch(function(err) {
-        setErrorText(err);
-    });
+    }).catch(setErrorText);
 }
 
 function makeButton(content, onClick) {
@@ -132,9 +128,7 @@ function deleteTodo(todo) {
         } else {
             throw Error("Failed to delete. Server returned " + response.status + " - " + response.statusText);
         }
-    }).catch(function(err) {
-        setErrorText(err);
-    });
+    }).catch(setErrorText);
 }
 
 function deleteCompletedTodos() {
@@ -155,9 +149,7 @@ function deleteCompletedTodos() {
                 } else {
                     throw Error("Failed to delete. Server returned " + response.status + " - " + response.statusText);
                 }
-            }).catch(function(err) {
-                setErrorText(err);
-            });
+            }).catch(setErrorText);
         });
     });
 }
@@ -178,9 +170,7 @@ function completeTodo(todo) {
         } else {
             throw Error("Failed to complete. Server returned " + response.status + " - " + response.statusText);
         }
-    }).catch(function(err) {
-        setErrorText(err);
-    });
+    }).catch(setErrorText);
 }
 
 function setErrorText(err) {
